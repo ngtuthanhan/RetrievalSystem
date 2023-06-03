@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware as CORSMiddleware
 import json
 from fastapi.staticfiles import StaticFiles
-from retriever import extractor, load_model, handle_query
+from retriever import extractor, load_model, handle_query, find_nearest
 import os 
 import numpy as np
 import pandas as pd
@@ -36,7 +36,7 @@ else:
 
 MODELS = load_model(feature, index)
 
-def find_dicts_with_keyframe(data_list, keyframes):
+async def find_dicts_with_keyframe(data_list, keyframes):
     matching_dicts = []
     for keyframe in keyframes:
         for data_dict in data_list:
@@ -60,14 +60,7 @@ async def get_video():
     response = video_list
     return response
 
-# @app.get("/api/video/{keyframe}", response_model = Video)
-# async def get_video_by_keyframe(keyframe):
-#     response = await fetch_one_video(keyframe)
-#     if response:
-#         return response
-#     raise HTTPException(404, f"There is no Video item with this id {keyframe}")
-
-@app.post("/api/video/", response_model = dict)
+@app.post("/api/video/")
 async def post_todo(Vietnamese, English):
     if Vietnamese != None:
         English = translator.translate(Vietnamese , src='vi', dest='en').text
@@ -77,10 +70,19 @@ async def post_todo(Vietnamese, English):
     video_ans = find_dicts_with_keyframe(video_list, results_frame)
     return video_ans
 
-@app.get("/api/video/Detail/{key_frame}", response_model = dict)
-async def get_video_by_key_frame(keyframe):
+@app.get("/api/video/detail/{keyframe}")
+async def search_video_by_keyframe(keyframe):
     response = find_detail(video_list, keyframe)
     return response
+
+@app.get("/api/video/knn/{keyframe}")
+async def find_nearest_video_by_keyframe(keyframe):
+    image = f"./data/keyframe/{keyframe}"
+    results = find_nearest(image, MODELS)
+    results = pd.DataFrame(results)
+    results_frame = [results[0][i] +"_" + results[1][i] for i in range(len(results))]
+    video_ans = find_dicts_with_keyframe(video_list, results_frame)
+    return video_ans
 
 # @app.put("/api/video/{keyframe}", response_model = Video)
 # async def put_todo(keyframe: str, video: dict):
@@ -95,3 +97,4 @@ async def get_video_by_key_frame(keyframe):
 #     if response:
 #         return "Sucessfully deleted Video item"
 #     raise HTTPException(404, f"There is no Video item with this id  {keyframe}")
+

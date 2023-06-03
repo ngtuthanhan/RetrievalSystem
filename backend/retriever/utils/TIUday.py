@@ -24,7 +24,7 @@ class Searcher:
         return self.index[neighbors]
 
         
-class CLIPFeatureExtractor:
+class CLIPTextExtractor:
     def __init__(self):
         model_name = "openai/clip-vit-base-patch16"
         self.model = CLIPModel.from_pretrained(model_name)
@@ -59,10 +59,25 @@ class Indexing:
             image_features = model.get_image_features(**inputs)
             features = np.concatenate((features,image_features.detach().numpy()),axis = 0)
             index.append(list((video,frame)))
-            with open('./retriever/feature.npy','wb') as f:
-                np.save(f, features)
-            with open('./retriever/index.npy','wb') as f:
-                np.save(f,index)
+            # with open('./retriever/feature.npy','wb') as f:
+            #     np.save(f, features)
+            # with open('./retriever/index.npy','wb') as f:
+            #     np.save(f,index)
         return features, np.array(index)
+    
+
+class CLIPImageExtractor:
+    def __init__(self):
+        model_name = "openai/clip-vit-base-patch16"
+        self.model = CLIPModel.from_pretrained(model_name)
+        self.processor = CLIPProcessor.from_pretrained(model_name)
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.model.to(self.device)
+
+    def __call__(self, image):
+        image = Image.open(image)
+        inputs = self.processor(images=image, return_tensors="pt")
+        image_features = self.model.get_image_features(**inputs)
+        return image_features
     
         

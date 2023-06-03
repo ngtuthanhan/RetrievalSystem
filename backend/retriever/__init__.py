@@ -1,5 +1,5 @@
 import numpy as np
-from .utils.TIUday import Searcher, CLIPFeatureExtractor, Indexing
+from .utils.TIUday import Searcher, CLIPTextExtractor, CLIPImageExtractor, Indexing
 
 
 def extractor():
@@ -13,15 +13,21 @@ def extractor():
 
 def load_model(features, index):
     SEARCHER = Searcher(index=index, features=features)
-    CLIP = CLIPFeatureExtractor()
+    CLIPTEXT = CLIPTextExtractor()
+    CLIPIMAGE = CLIPImageExtractor()
     MODELS = {
         "SEACHER": SEARCHER,
-        "EXTRACTOR": CLIP
+        "TEXT": CLIPTEXT,
+        "IMAGE": CLIPIMAGE,
     }
     return MODELS
 
-
 def handle_query(query, MODELS):
-    text_embedding = MODELS["EXTRACTOR"](query)
+    text_embedding = MODELS["TEXT"](query)
+    results = MODELS["SEACHER"](np.array(text_embedding).reshape(-1))
+    return results
+
+def find_nearest(image, MODELS):
+    text_embedding = MODELS["IMAGE"](image)
     results = MODELS["SEACHER"](np.array(text_embedding).reshape(-1))
     return results
