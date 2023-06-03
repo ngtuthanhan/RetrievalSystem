@@ -11,8 +11,9 @@ if not os.path.exists('./data/video'):
     os.makedirs('./data/video')
 
 if not os.path.exists('./data/keyframe'):
-        os.makedirs('./data/keyframe')
+    os.makedirs('./data/keyframe')
 
+# In this problem, I just handle with 200 fist samples
 for i in range(len(df[:1000])):
     url = df['url'][i]
     wget.download(url, f'./data/video/{i}.gif')

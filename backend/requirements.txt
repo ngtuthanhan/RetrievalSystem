@@ -2,3 +2,9 @@ fastapi
 uvicorn
 motor
 ffmpeg-python
+scann
+torch
+transformers
+googletrans
+Pillow
+pandas
