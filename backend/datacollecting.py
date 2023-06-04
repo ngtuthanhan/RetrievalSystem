@@ -33,7 +33,6 @@ for i in range(len(df[:200])):
     
     frame_temp.sort()
     for j, frame_id in enumerate(frame_temp):
-        
         keyframes.append({
             "url": url,
             "video": str(i) + ".gif",

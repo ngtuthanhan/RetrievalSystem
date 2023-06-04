@@ -1,5 +1,9 @@
 export default function VideoView(props) {
     const VideoList = props.VideoList
+    console.log(VideoList[0])
+    if (VideoList[0] === {}){
+        return (<div> </div>)
+    }
     return (
         <div id="content" class="content-custom">
         <div class="wrapper">
