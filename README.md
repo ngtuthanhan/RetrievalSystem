@@ -28,7 +28,7 @@ cd frontend
 npm install
 npm start
 ```
-Web system display on port 4000
+Web system displays on port 4000
 
 ## Usage
 Retrieve Video by Vietnamese description or English description. Detail can be used to view all extracted keyframes with the video.  KNN to find the keyframes with the closest distance to the selected keyframe.
