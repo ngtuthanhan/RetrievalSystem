@@ -1,38 +1,81 @@
-export default function Detail(props) {
-    const VideoList = props.VideoList
-    return (
-        <div id="content" class="content-custom">
-        <div class="wrapper">
-            {VideoList.map(video =>  
-            <div class="">
-            <input type="checkbox" id={"myCheckbox_"+video.keyframe}
-                video={video.video} frame={video.frame_id}/>
-            <label for={"myCheckbox_"+video.keyframe} class="label-checkbox">
-                <img src={"http://localhost:8000/data/keyframe/"+video.keyframe}
-                alt={video.keyframe}/>
-                <div class="bottom-left">{video.video}</div>
-                <div class="bottom-right">{video.frame_id}</div>
-                <div class="top-right">
-                <a class="detail-form-btn" href={"/knn/"+video.keyframe}>
-                    <span>
-                    KNN
-                    </span>
-                </a>
-                </div>
+import React, { useState, useEffect} from 'react';
+import VideoView from './VideoListView';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-                <div class="top-left">
-                <a class="detail-form-btn" href={"/detail/"+video.keyframe}>
-                    <span>
-                    Detail
-                    </span>
-                </a>
-                </div>
-                </label>
-            </div>
-            )}
-        </div>
-        </div>
-        
-    )
+
+
+function Detail() {
+  const params = useParams()
+  const keyframe = params.keyframe
+
+  const [VideoList, setVideoList] = useState([{}])
+
+  const [formData, setFormData] = useState({
+    Vietnamese: '',
+    English: '',
+  });
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/video/detail/' + keyframe)
+      .then(res => {
+        setVideoList(res.data)
+      })
+  });
+
+  const handleInputChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios
+      .post('http://localhost:8000/api/video/', formData)
+      .then((res) => {   
+          setVideoList(res.data)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  
+  return (
     
+
+    <div class="d-md-flex align-items-stretch">
+      <nav id="sidebar">
+        <form onSubmit={handleSubmit}
+          class="subscribe-form p-4">
+          <div class="form-group d-flex" data-validate="Text description is
+            required">
+            <textarea class="icon form-control" name="Vietnamese"
+              placeholder="Vietnamese desciption" value={formData.Vietnamese}
+              onChange={handleInputChange}></textarea>
+            <span class="icon-paper-plane"></span>
+          </div>
+          <div class="form-group d-flex" data-validate="Text description is
+            required">
+            <textarea class="icon form-control" name="English"
+              placeholder="English desciption" value={formData.English}
+              onChange={handleInputChange}></textarea>
+            <span class="icon-paper-plane"></span>
+          </div>
+ 
+          <div class="container-contact1-form-btn">
+            <button class="contact1-form-btn">
+              <span>
+                Search
+              </span>
+            </button>
+          </div>
+        </form>
+        <div class="border-top p"></div>
+        <p id="result" class="passage"></p>
+      </nav>
+    <div id="content" class="content-custom"><VideoView VideoList={VideoList} /> </div>
+  </div>
+      
+  );
 }
+
+export default Detail;

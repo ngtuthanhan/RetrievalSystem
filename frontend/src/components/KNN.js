@@ -30,12 +30,7 @@ function KNN() {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post('http://localhost:8000/api/video/?English=Hello'
-      // , {
-      //   Vietnamese: '',
-      //   English: 'Hello',
-      // }
-      )
+      .post('http://localhost:8000/api/video/', formData)
       .then((res) => {   
           setVideoList(res.data)
       })

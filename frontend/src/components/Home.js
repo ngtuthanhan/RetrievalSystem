@@ -18,13 +18,9 @@ function Home() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(formData)
     axios
-      .post('http://localhost:8000/api/video/?English=Hello'
-      // , {
-      //   Vietnamese: '',
-      //   English: 'Hello',
-      // }
-      )
+      .post('http://localhost:8000/api/video/', formData)
       .then((res) => {   
           setVideoList(res.data)
       })

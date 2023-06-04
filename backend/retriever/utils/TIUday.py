@@ -11,7 +11,7 @@ from transformers import CLIPModel, CLIPProcessor
 from tqdm import tqdm
 from PIL import Image
 class Searcher:
-    def __init__(self, index, features, num_neighbors = 50, distance_measure = 'dot_product'):
+    def __init__(self, index, features, num_neighbors = 200, distance_measure = 'dot_product'):
         self.index = index
         self.searcher = scann.scann_ops_pybind.builder(
                                 features,
@@ -19,7 +19,7 @@ class Searcher:
                                 distance_measure).score_brute_force(1).build()
         
     def __call__(self,text_embedding):
-        neighbors, distances = self.searcher.search(text_embedding, final_num_neighbors = 50)
+        neighbors, distances = self.searcher.search(text_embedding, final_num_neighbors = 200)
         # print(self.index[neighbors])
         return self.index[neighbors]
 
