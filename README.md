@@ -9,16 +9,26 @@ Ubuntu 18.04.6
 ## Instruction
 
 ### Step 1 - Data collecting
+Open CLI, run
 ```
 cd backend
 python3 datacollecting.py
 ```
 
 
-### Step 2 - Running web system
+### Step 2 - Installing package and running web system
+Excute
 ```
-docker-compose up --build
+pip install -r requirements.txt
+uvicorn main:app
 ```
+Open new CLI (still open the remaining CLI), excute
+```
+cd frontend
+npm install
+npm start
+```
+Web system display on port 4000
 
 ## Usage
 Retrieve Video by Vietnamese description or English description. Detail can be used to view all extracted keyframes with the video.  KNN to find the keyframes with the closest distance to the selected keyframe.
