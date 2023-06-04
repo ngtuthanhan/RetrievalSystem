@@ -1,23 +1,22 @@
 // @bekbrace
 // FARMSTACK Tutorial - Sunday 13.06.2021
  
-import React, { useState, useEffect} from 'react';
-import VideoView from './components/VideoListView';
-import axios from 'axios';
+import React from 'react';
+import {Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import Detail from "./components/Detail";
+import KNN from "./components/KNN";
+
 
 function App() {
 
-  const [VideoList, setVideoList] = useState([{}])
-
-  // Read all videos
-  useEffect(() => {
-    axios.get('http://localhost:8000/api/video',)
-      .then(res => {
-        setVideoList(res.data)
-      })
-  });
   return (
-    <div><VideoView VideoList={VideoList} /></div>
+    <Routes>
+          <Route index element={<Home />} />
+          <Route path="detail/:keyframe" element={<Detail />} />
+          <Route path="knn/:keyframe" element={<KNN />} />
+    </Routes>
+      
   );
 }
 

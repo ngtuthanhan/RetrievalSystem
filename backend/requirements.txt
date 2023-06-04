@@ -5,6 +5,7 @@ ffmpeg-python
 scann
 torch
 transformers
-googletrans
+googletrans==4.0.0rc1
 Pillow
 pandas
+wget

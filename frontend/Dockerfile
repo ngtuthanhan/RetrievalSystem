@@ -9,6 +9,5 @@ RUN npm run build
 
 # Build step #2: build an Caddy container
 FROM caddy:alpine
-EXPOSE 80
-EXPOSE 443
+EXPOSE 4000
 COPY --from=build-step /app/build /usr/share/caddy

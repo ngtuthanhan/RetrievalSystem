@@ -14,13 +14,13 @@ if not os.path.exists('./data/keyframe'):
     os.makedirs('./data/keyframe')
 
 # In this problem, I just handle with 200 fist samples
-for i in range(len(df[:1000])):
+for i in range(len(df[:200])):
     url = df['url'][i]
     wget.download(url, f'./data/video/{i}.gif')
     (
         ffmpeg
         .input(f'data/video/{i}.gif')
-        .output(f'data/keyframe/{i}_%d.jpeg', skip_frame="nokey", vf="select='eq(pict_type,I)'")
+        .output(f'data/keyframe/{i}_%d.jpeg', vf="select='eq(pict_type,I)'", vsync=0)
         .run()
     )
         

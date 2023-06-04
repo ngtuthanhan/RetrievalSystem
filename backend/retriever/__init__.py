@@ -24,10 +24,10 @@ def load_model(features, index):
 
 def handle_query(query, MODELS):
     text_embedding = MODELS["TEXT"](query)
-    results = MODELS["SEACHER"](np.array(text_embedding).reshape(-1))
+    results = MODELS["SEACHER"](text_embedding.reshape(-1))
     return results
 
 def find_nearest(image, MODELS):
-    text_embedding = MODELS["IMAGE"](image)
-    results = MODELS["SEACHER"](np.array(text_embedding).reshape(-1))
+    image_embedding = MODELS["IMAGE"](image)
+    results = MODELS["SEACHER"](image_embedding.reshape(-1))
     return results

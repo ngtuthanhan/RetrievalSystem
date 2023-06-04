@@ -1,7 +1,5 @@
-// import VideoItem from './Video'
-
 export default function VideoView(props) {
-    const VideoList = props.VideoList.slice(0,100)
+    const VideoList = props.VideoList
     return (
         <div id="content" class="content-custom">
         <div class="wrapper">
@@ -15,7 +13,7 @@ export default function VideoView(props) {
                 <div class="bottom-left">{video.video}</div>
                 <div class="bottom-right">{video.frame_id}</div>
                 <div class="top-right">
-                <a class="detail-form-btn" href={"/KNN/"+video.keyframe}>
+                <a class="detail-form-btn" href={"/knn/"+video.keyframe}>
                     <span>
                     KNN
                     </span>
@@ -23,7 +21,7 @@ export default function VideoView(props) {
                 </div>
 
                 <div class="top-left">
-                <a class="detail-form-btn" href={"/Detail/"+video.keyframe}>
+                <a class="detail-form-btn" href={"/detail/"+video.keyframe}>
                     <span>
                     Detail
                     </span>

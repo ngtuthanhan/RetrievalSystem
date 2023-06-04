@@ -37,8 +37,7 @@ class CLIPTextExtractor:
         inputs = inputs.to(self.device)
         text_features = self.model.get_text_features(**inputs)
         text_features /= text_features.norm(dim=-1, keepdim=True)
-        text_features = text_features.tolist()
-        return text_features
+        return text_features.detach().numpy()
 
 class Indexing:
     def __init__(self,root_data):
@@ -59,10 +58,6 @@ class Indexing:
             image_features = model.get_image_features(**inputs)
             features = np.concatenate((features,image_features.detach().numpy()),axis = 0)
             index.append(list((video,frame)))
-            # with open('./retriever/feature.npy','wb') as f:
-            #     np.save(f, features)
-            # with open('./retriever/index.npy','wb') as f:
-            #     np.save(f,index)
         return features, np.array(index)
     
 
@@ -78,6 +73,7 @@ class CLIPImageExtractor:
         image = Image.open(image)
         inputs = self.processor(images=image, return_tensors="pt")
         image_features = self.model.get_image_features(**inputs)
-        return image_features
+        image_features /= image_features.norm(dim=-1, keepdim=True)
+        return image_features.detach().numpy()
     
         

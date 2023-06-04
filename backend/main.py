@@ -11,10 +11,9 @@ from googletrans import Translator
 
 # App object
 app = FastAPI()
-translator = Translator()
 
 app.mount("/data", StaticFiles(directory="data"))
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:4000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+translator = Translator()
 
 with open('./data/keyframe.json') as file:
     video_list = json.load(file)
@@ -36,7 +37,7 @@ else:
 
 MODELS = load_model(feature, index)
 
-async def find_dicts_with_keyframe(data_list, keyframes):
+def find_dicts_with_keyframe(data_list, keyframes):
     matching_dicts = []
     for keyframe in keyframes:
         for data_dict in data_list:
@@ -61,8 +62,8 @@ async def get_video():
     return response
 
 @app.post("/api/video/")
-async def post_todo(Vietnamese, English):
-    if Vietnamese != None:
+async def post_todo(Vietnamese = '', English = ''):
+    if Vietnamese != '': 
         English = translator.translate(Vietnamese , src='vi', dest='en').text
     results = handle_query(English, MODELS)
     results = pd.DataFrame(results)
@@ -83,18 +84,3 @@ async def find_nearest_video_by_keyframe(keyframe):
     results_frame = [results[0][i] +"_" + results[1][i] for i in range(len(results))]
     video_ans = find_dicts_with_keyframe(video_list, results_frame)
     return video_ans
-
-# @app.put("/api/video/{keyframe}", response_model = Video)
-# async def put_todo(keyframe: str, video: dict):
-#     response = await update_video(keyframe, video)
-#     if response:
-#         return response
-#     raise HTTPException(404, f"There is no Video item with this id {keyframe}")
-
-# @app.delete("/api/video/{keyframe}", response_model = Video)
-# async def delete_video(keyframe):
-#     response = await remove_video(keyframe)
-#     if response:
-#         return "Sucessfully deleted Video item"
-#     raise HTTPException(404, f"There is no Video item with this id  {keyframe}")
-
